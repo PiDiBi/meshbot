@@ -25,21 +25,21 @@ connect your node over serial to Raspberry PI and let this bot answer public and
 - start service `sudo systemctl start meshbot.service`
 - see status `sudo systemctl status meshbot.service | more` - this one displays log from the service so you can see when you send a message what happened
 
-## Commands
+## commands
 
-- Various weather conditions
+- basic functions
+  - `ping` - response with PONG and signal strength
+  - `whereami` returns the address of location of sender if known
+  - `joke` tells a joke
+  - `whereami` - tries to find your location from GPS
+- (space) weather conditions
   - `sun` and `moon` return info on rise and set local time
   - `tide` returns the local tides, NOAA data source
   - `solar` gives an idea of the x-ray flux
   - `hfcond` returns a table of HF solar conditions
   - `wx` and `wxc` returns local weather forcast, NOAA data source (wxc is metric value)
-- Other functions
-  - `ping` - response with PONG and signal strength
-  - `whereami` returns the address of location of sender if known
-  - `joke` tells a joke
-  - `whereami` - tries to find your location from GPS
 
-## Recognition
+## recognition
 
 Used ideas and snippets from other responder bots want to call them out!
  - https://github.com/SpudGunMan/meshing-around
