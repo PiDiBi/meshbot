@@ -8,6 +8,23 @@ connect your node over serial to Raspberry PI and let this bot answer public and
   - got you to install python, pip and few other dependencies
 - dependencies - install with `pip install -r requirements.txt`
 
+## test on RPI
+
+### test over ssh terminal
+
+- edit mesh_bot.py if you need other than serial connection
+- run `python3 mesh_bot.py` 
+- if it starts without errors send private message to your node from other node `PING`
+- you should see response in the terminal and got it as message too
+- terminate the script and install it as service
+
+### install bot as a service
+
+- create and edit service file (see content of [mesh_bot.service](mesh_bot.service)) `sudo nano /etc/systemd/system/meshbot.service`
+- reload daemon `sudo systemctl daemon-reload`
+- start service `sudo systemctl start meshbot.service`
+- see status `sudo systemctl status meshbot.service | more` - this one displays log from the service so you can see when you send a message what happened
+
 ## Commands
 
 - Various weather conditions
