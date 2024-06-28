@@ -12,29 +12,18 @@ class BasicBot(MessageProcessor):
     def auto_response(self, message, snr, rssi, hop, message_from_id, location:list[float]):
         print(f"BasicBot: Got message: {message}")
 
-        message = message.lower()
+        message = message.lower().strip()
         if "ping" in message:
             #Check if the user added @foo to the message
-            if "@" in message:
-                if hop == "Direct":
-                    bot_response = "PONG, " + f"SNR:{snr} RSSI:{rssi}" + " and copy: " + message.split("@")[1]
-                else:
-                    bot_response = "PONG, " + hop + " and copy: " + message.split("@")[1]
-            else:
-                if hop == "Direct":
-                    bot_response = "PONG, " + f"SNR:{snr} RSSI:{rssi}"
-                else:
-                    bot_response = "PONG, " + hop
+            bot_response = "PONG, " + f"SNR:{snr} RSSI:{rssi} HOP {hop}"
+            if " " in message:
+                bot_response += " and copy: " + message.split(" ")[1]
+
         elif "ack" in message:
-            if hop == "Direct":
-                bot_response = "ACK-ACK! " + f"SNR:{snr} RSSI:{rssi}"
-            else:
-                bot_response = "ACK-ACK! " + hop
-        elif "testing" in message:
-            bot_response = "Testing 1,2,3"
-        elif "pong" in message:
-            bot_response = "PING!!"
-        elif "lheard" in message.lower() or "sitrep" in message.lower():
+            bot_response = "ACK-ACK! " + f"SNR:{snr} RSSI:{rssi} HOP {hop}"
+            if " " in message:
+                bot_response += " and copy: " + message.split(" ")[1]
+        elif "lheard" in message or "sitrep" in message:
             #bot_response = "Last 5 nodes heard:\n" + str(get_node_list())
             pass
         elif "whereami" in message:

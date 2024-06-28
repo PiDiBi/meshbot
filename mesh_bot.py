@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 # Meshtastic Autoresponder MESH Bot
-# based on work of K7MHI Kelly Keeton
 
 import signal
 import time
@@ -18,8 +17,8 @@ import meshtastic.ble_interface
 from weather_bot import WeatherBot
 
 # Uncomment the interface you want to use depending on your device connection
-interface = meshtastic.serial_interface.SerialInterface() #serial interface
-#interface=meshtastic.tcp_interface.TCPInterface(hostname="10.0.4.36") # IP of your device
+#interface = meshtastic.serial_interface.SerialInterface() #serial interface
+interface=meshtastic.tcp_interface.TCPInterface(hostname="10.0.4.36") # IP of your device
 #interface=meshtastic.ble_interface.BLEInterface("10:06:1C:49:90:36") # BLE interface - find it using meshtastic --ble-scan
 
 #interface = None

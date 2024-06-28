@@ -22,7 +22,7 @@ class WeatherBot(MessageProcessor):
     def auto_response(self, message, snr, rssi, hop, message_from_id, location:list[float]):
         print(f"WeatherBot: Got message: {message}")
 
-        message = message.lower()
+        message = message.lower().strip()
 
         if "sun" in message:
             bot_response = self.get_sun(str(location[0]), str(location[1]))
