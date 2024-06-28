@@ -95,6 +95,64 @@ class TestGetWeather(unittest.TestCase):
         self.assertEqual(bot.replace_weather("showers"), "shwrs")
         self.assertEqual(bot.replace_weather("thunderstorms"), "t-storms")
 
+    def test_get_moon_with_valid_coordinates(self):
+        # Test with valid coordinates
+        bot = WeatherBot()
+        lat = "37.7749"
+        lon = "-122.4194"
+        moon = bot.get_moon(lat, lon)
+        print(f"moon: {moon}")
+        self.assertNotEqual(moon, bot.NO_DATA_NOGPS)
+        self.assertNotEqual(moon, bot.ERROR_FETCHING_DATA)
+        self.assertIn("Moon Rise", moon)
+        self.assertIn("Set", moon)
+        self.assertIn("Phase", moon)
+        self.assertIn("Full Moon", moon)
+        self.assertIn("New Moon", moon)
 
+    def test_solar_with_valid_coordinates(self):
+        # Test with valid coordinates
+        bot = WeatherBot()
+        solar = bot.solar_conditions()
+        print(f"solar: {solar}")
+        self.assertNotEqual(solar, bot.NO_DATA_NOGPS)
+        self.assertNotEqual(solar, bot.ERROR_FETCHING_DATA)
+        self.assertIn("A-Index", solar)
+        self.assertIn("K-Index", solar)
+        self.assertIn("Sunspots", solar)
+        self.assertIn("Solar Flux", solar)
+        self.assertIn("X-Ray Flux", solar)
+        self.assertIn("Signal Noise", solar)
+
+    def test_drap_xray_conditions (self):
+        bot = WeatherBot()
+        xray = bot.drap_xray_conditions()
+        print(f"xray: {xray}")
+        self.assertNotEqual(xray, bot.NO_DATA_NOGPS)
+        self.assertNotEqual(xray, bot.ERROR_FETCHING_DATA)
+        self.assertIn("X-ray", xray)
+
+    def test_get_hf_band_conditions (self):
+        bot = WeatherBot()
+        hf = bot.hf_band_conditions()
+        print(f"hf: {hf}")
+        self.assertNotEqual(hf, bot.NO_DATA_NOGPS)
+        self.assertNotEqual(hf, bot.ERROR_FETCHING_DATA)
+        # d80m-40m=Poor
+        # d30m-20m=Poor
+        # d17m-15m=Good
+        # d12m-10m=Good
+        # n80m-40m=Fair
+        # n30m-20m=Good
+        # n17m-15m=Good
+        # n12m-10m=Poor
+        self.assertIn("80m", hf)
+        self.assertIn("40m", hf)
+        self.assertIn("30m", hf)
+        self.assertIn("20m", hf)
+        self.assertIn("15m", hf)
+        self.assertIn("10m", hf)
+
+        
 if __name__ == '__main__':
     unittest.main()

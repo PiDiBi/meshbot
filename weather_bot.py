@@ -6,6 +6,7 @@ import bs4 as bs
 from datetime import datetime
 from datetime import timedelta
 
+from log import log_timestamp
 from message_processor import MessageProcessor
 
 
@@ -44,6 +45,8 @@ class WeatherBot(MessageProcessor):
         # ham radio HF band conditions
         hf_cond = ""
         band_cond = requests.get("https://www.hamqsl.com/solarxml.php", timeout=super().URL_TIMEOUT)
+        print (f"{log_timestamp()} System: {band_cond}")
+
         if(band_cond.ok):
             solarxml = xml.dom.minidom.parseString(band_cond.text)
             for i in solarxml.getElementsByTagName("band"):
@@ -57,6 +60,8 @@ class WeatherBot(MessageProcessor):
         # radio related solar conditions from hamsql.com
         solar_cond = ""
         solar_cond = requests.get("https://www.hamqsl.com/solarxml.php", timeout=super().URL_TIMEOUT)
+        print (f"{log_timestamp()} System: {solar_cond}")
+
         if(solar_cond.ok):
             solar_xml = xml.dom.minidom.parseString(solar_cond.text)
             for i in solar_xml.getElementsByTagName("solardata"):
@@ -75,6 +80,8 @@ class WeatherBot(MessageProcessor):
         # DRAP X-ray flux conditions, from NOAA direct
         drap_cond = ""
         drap_cond = requests.get("https://services.swpc.noaa.gov/text/drap_global_frequencies.txt", timeout=super().URL_TIMEOUT)
+        print (f"{log_timestamp()} System: {drap_cond}")
+
         if(drap_cond.ok):
             drap_list = drap_cond.text.split('\n')
             x_filter = '#  X-RAY Message :'
@@ -152,12 +159,13 @@ class WeatherBot(MessageProcessor):
         
         return moon_data
 
-
     def get_tide(self, lat=0, lon=0):
         station_id = ""
         if float(lat) == 0 and float(lon) == 0:
             return super().NO_DATA_NOGPS
         station_lookup_url = "https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/tidepredstations.json?lat=" + str(lat) + "&lon=" + str(lon) + "&radius=50"
+        print (f"{log_timestamp()} System: {station_lookup_url}")
+
         try:
             station_data = requests.get(station_lookup_url, timeout=super().URL_TIMEOUT)
             if station_data.ok:
@@ -173,6 +181,7 @@ class WeatherBot(MessageProcessor):
         station_id = station_json['stationList'][0]['stationId']
 
         station_url = "https://tidesandcurrents.noaa.gov/noaatidepredictions.html?id=" + station_id
+        print (f"{log_timestamp()} System: {station_url}")
 
         try:
             station_data = requests.get(station_url, timeout=super().URL_TIMEOUT)
@@ -208,10 +217,12 @@ class WeatherBot(MessageProcessor):
         if float(lat) == 0 and float(lon) == 0:
             return super().NO_DATA_NOGPS
         
-
         weather_url = "https://forecast.weather.gov/MapClick.php?FcstType=text&lat=" + str(lat) + "&lon=" + str(lon)
+
         if unit == 1:
             weather_url += "&unit=1"
+
+        print (f"{log_timestamp()} System: {weather_url}")
         
         try:
             weather_data = requests.get(weather_url, timeout=super().URL_TIMEOUT)
