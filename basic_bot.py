@@ -1,11 +1,12 @@
 from message_processor import MessageProcessor
 from geopy.geocoders import Nominatim
-import maidenhead as mh # pip install maidenhead
+import maidenhead as mh
+from dadjokes import Dadjoke
 
 class BasicBot(MessageProcessor):
     def __init__(self):
         super().__init__()
-        self.trap_list = ["ping", "ack", "testing", "pong", "lheard", "sitrep"]
+        self.trap_list = ["ping", "ack", "testing", "pong", "lheard", "sitrep", "joke"]
         pass
     
     def auto_response(self, message, snr, rssi, hop, message_from_id, location:list[float]):
@@ -38,9 +39,16 @@ class BasicBot(MessageProcessor):
             pass
         elif "whereami" in message:
             bot_response = self.where_am_i(location[0], location[1])
+        elif "joke" in message:
+            bot_response = self.tell_joke()
         
         return bot_response
 
+    def tell_joke(self):
+    # tell a dad joke, does it need an explanationn :)
+        dadjoke = Dadjoke()
+        return dadjoke.joke
+    
     def where_am_i(self, lat=0, lon=0):
         whereIam = ""
         if float(lat) == 0 and float(lon) == 0:
