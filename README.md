@@ -2,7 +2,9 @@
 
 ## requirements
 
-install with `pip install -r requirements.txt`
+- python3
+- pip
+- dependencies - install with `pip install -r requirements.txt`
 
 ## Commands
 
