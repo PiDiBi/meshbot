@@ -69,90 +69,95 @@ class SerialMeshHelper:
         snr = 0
         rssi = 0
         try:
-            if 'decoded' in packet and packet['decoded']['portnum'] == 'TEXT_MESSAGE_APP':
-                # print the packet for debugging
-                
-                # print(" -- START of Packet --")
-                # print(packet)
-                # print(" -- END of packet -- \n")
-
-                message_bytes = packet['decoded']['payload']
-                message_string = message_bytes.decode('utf-8')
-                message_from_id = packet['from']
-                snr = packet['rxSnr']
-                rssi = packet['rxRssi']
-
-                if packet.get('channel'):
-                    channel_number = packet['channel']
-                else:
-                    channel_number = 0
+            if not 'decoded' in packet or not packet['decoded']['portnum'] == 'TEXT_MESSAGE_APP':
+                return
+            # print the packet for debugging
             
-                # check if the packet has a hop count flag use it
-                if packet.get('hopsAway'):
-                    hop_away = packet['hopsAway']
+            # print(" -- START of Packet --")
+            # print(packet)
+            # print(" -- END of packet -- \n")
+
+            message_bytes = packet['decoded']['payload']
+            message_string = message_bytes.decode('utf-8')
+            message_from_id = packet['from']
+            snr = packet['rxSnr']
+            rssi = packet['rxRssi']
+
+            if message_string == "SF":
+                print(f"{log_timestamp()} System: Ignoring SF (Store and Forward msg) From: {self.get_name_from_number(message_from_id)}")
+                return
+
+            if packet.get('channel'):
+                channel_number = packet['channel']
+            else:
+                channel_number = 0
+        
+            # check if the packet has a hop count flag use it
+            if packet.get('hopsAway'):
+                hop_away = packet['hopsAway']
+            else:
+                # if the packet does not have a hop count try other methods
+                hop_away = 0
+                if packet.get('hopLimit'):
+                    hop_limit = packet['hopLimit']
                 else:
-                    # if the packet does not have a hop count try other methods
-                    hop_away = 0
-                    if packet.get('hopLimit'):
-                        hop_limit = packet['hopLimit']
-                    else:
-                        hop_limit = 0
-                    
-                    if packet.get('hopStart'):
-                        hop_start = packet['hopStart']
-                    else:
-                        hop_start = 0
-
-                if hop_start == hop_limit:
-                    hop = "Direct"
-                else:
-                    # set hop to Direct if the message was sent directly otherwise set the hop count
-                    if hop_away > 0:
-                        hop_count = hop_away
-                    else:
-                        hop_count = hop_start - hop_limit
-                        #print (f"calculated hop count: {hop_start} - {hop_limit} = {hop_count}")
-
-                    hop = f"{hop_count} hops"
-
-                wasHandled = False
-
-                location:list[float] = self.get_node_location(message_from_id)
-
-                response = None
+                    hop_limit = 0
                 
-                for processor in self.message_processors:
-                    if processor.messageTrap(message_string):
-                        response = processor.auto_response(message_string, snr, rssi, hop, message_from_id, location, self.get_node_list())
-                    if response:
-                        wasHandled = True
-                        break
-
-                if not response:
-                    response = self.help_message
-
-                # If the packet is a DM (Direct Message) respond to it, otherwise validate its a message for us
-                print(f"{log_timestamp()} System: Received DM: {message_string} From: {self.get_name_from_number(message_from_id)}")
-                print(f"{log_timestamp()} System: To: {packet['to']}")
-                print(f"{log_timestamp()} System: My Node Number is {self.myNodeNum}")
-                if packet['to'] == self.myNodeNum:
-                    print(f"{log_timestamp()} Received DM: {message_string} on Channel: {channel_number} From: {self.get_name_from_number(message_from_id)}")
-                    # respond with a direct message
-                    self.send_message(response, channel_number, message_from_id)
+                if packet.get('hopStart'):
+                    hop_start = packet['hopStart']
                 else:
-                    if wasHandled:
-                        print(f"{log_timestamp()} Received On Channel {channel_number}: {message_string} From: {self.get_name_from_number(message_from_id)}")
-                        if RESPOND_BY_DM_ONLY:
-                            # respond to channel message via direct message to keep the channel clean
-                            self.send_message(response, channel_number, message_from_id)
-                        else:
-                            # or respond to channel message on the channel itself
-                            self.send_message(response, channel_number, 0)
+                    hop_start = 0
+
+            if hop_start == hop_limit:
+                hop = "Direct"
+            else:
+                # set hop to Direct if the message was sent directly otherwise set the hop count
+                if hop_away > 0:
+                    hop_count = hop_away
+                else:
+                    hop_count = hop_start - hop_limit
+                    #print (f"calculated hop count: {hop_start} - {hop_limit} = {hop_count}")
+
+                hop = f"{hop_count} hops"
+
+            wasHandled = False
+
+            location:list[float] = self.get_node_location(message_from_id)
+
+            response = None
+            
+            for processor in self.message_processors:
+                if processor.messageTrap(message_string):
+                    response = processor.auto_response(message_string, snr, rssi, hop, message_from_id, location, self.get_node_list())
+                if response:
+                    wasHandled = True
+                    break
+
+            if not response:
+                response = self.help_message
+
+            # If the packet is a DM (Direct Message) respond to it, otherwise validate its a message for us
+            print(f"{log_timestamp()} System: Received DM: {message_string} From: {self.get_name_from_number(message_from_id)}")
+            print(f"{log_timestamp()} System: To: {packet['to']}")
+            print(f"{log_timestamp()} System: My Node Number is {self.myNodeNum}")
+            if packet['to'] == self.myNodeNum:
+                print(f"{log_timestamp()} Received DM: {message_string} on Channel: {channel_number} From: {self.get_name_from_number(message_from_id)}")
+                # respond with a direct message
+                self.send_message(response, channel_number, message_from_id)
+            else:
+                if wasHandled:
+                    print(f"{log_timestamp()} Received On Channel {channel_number}: {message_string} From: {self.get_name_from_number(message_from_id)}")
+                    if RESPOND_BY_DM_ONLY:
+                        # respond to channel message via direct message to keep the channel clean
+                        self.send_message(response, channel_number, message_from_id)
                     else:
-                        print(f"{log_timestamp()} System: Ignoring incoming channel {channel_number}: {message_string} From: {self.get_name_from_number(message_from_id)}")
-                
-                # wait a 700ms to avoid message collision from lora-ack
-                time.sleep(0.7)
+                        # or respond to channel message on the channel itself
+                        self.send_message(response, channel_number, 0)
+                else:
+                    print(f"{log_timestamp()} System: Ignoring incoming channel {channel_number}: {message_string} From: {self.get_name_from_number(message_from_id)}")
+            
+            # wait a 700ms to avoid message collision from lora-ack
+            time.sleep(0.7)
 
         except KeyError as e:
             print(f"System: Error processing packet: {e}")
