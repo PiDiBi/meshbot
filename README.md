@@ -8,7 +8,17 @@ connect your node over serial to Raspberry PI and let this bot answer public and
   - got you to install python, pip and few other dependencies
 - dependencies - install with `pip install -r requirements.txt`
 
-## test on RPI
+## run on RPI
+
+### how to get it there
+
+use git clone or upload via ssh (winSCP)
+
+```bash
+sudo apt install git
+git clone https://github.com/PiDiBi/meshbot.git
+cd meshbot
+```
 
 ### test over ssh terminal
 
@@ -42,4 +52,5 @@ connect your node over serial to Raspberry PI and let this bot answer public and
 ## recognition
 
 Used ideas and snippets from other responder bots want to call them out!
- - https://github.com/SpudGunMan/meshing-around
+
+- https://github.com/SpudGunMan/meshing-around
