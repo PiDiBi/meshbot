@@ -123,7 +123,7 @@ class SerialMeshHelper:
                 
                 for processor in self.message_processors:
                     if processor.messageTrap(message_string):
-                        response = processor.auto_response(message_string, snr, rssi, hop, message_from_id, location)
+                        response = processor.auto_response(message_string, snr, rssi, hop, message_from_id, location, self.get_node_list())
                     if response:
                         wasHandled = True
                         break
@@ -164,7 +164,6 @@ class SerialMeshHelper:
 
     def get_node_list(self):
         node_list = []
-        short_node_list = []
         if self.interface.nodes:
             for node in self.interface.nodes.values():
                 # ignore own
@@ -180,13 +179,8 @@ class SerialMeshHelper:
                     node_list.append(item)
             
             node_list.sort(key=lambda x: x[1], reverse=True)
-            #print (f"Node List: {node_list[:5]}\n")
 
-            # make a nice list for the user
-            for x in node_list[:5]:
-                short_node_list.append(f"{x[0]} SNR:{x[2]}")
-
-            return "\n".join(short_node_list)
+            return node_list
         
         else:
             return "Error Processing Node List"

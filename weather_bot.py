@@ -19,7 +19,7 @@ class WeatherBot(MessageProcessor):
         self.trap_list = ["sun", "solar", "hfcond", "tide", "moon", "wxc", "wx"]
         pass
     
-    def auto_response(self, message, snr, rssi, hop, message_from_id, location:list[float]):
+    def auto_response(self, message, snr, rssi, hop, message_from_id, location:list[float], node_list:list[str]):
         print(f"WeatherBot: Got message: {message}")
 
         message = message.lower().strip()

@@ -9,7 +9,7 @@ class BasicBot(MessageProcessor):
         self.trap_list = ["ping", "ack", "testing", "pong", "lheard", "sitrep", "joke"]
         pass
     
-    def auto_response(self, message, snr, rssi, hop, message_from_id, location:list[float]):
+    def auto_response(self, message, snr, rssi, hop, message_from_id, location:list[float], node_list:list[str]):
         print(f"BasicBot: Got message: {message}")
 
         message = message.lower().strip()
@@ -23,11 +23,18 @@ class BasicBot(MessageProcessor):
             bot_response = "ACK-ACK! " + f"SNR:{snr} RSSI:{rssi} HOP {hop}"
             if " " in message:
                 bot_response += " and copy: " + message.split(" ")[1]
+
         elif "lheard" in message or "sitrep" in message:
-            #bot_response = "Last 5 nodes heard:\n" + str(get_node_list())
-            pass
+            # make a nice list for the user
+            short_node_list = []
+            for x in node_list[:5]:
+                short_node_list.append(f"{x[0]} SNR:{x[2]}")
+
+            bot_response = "Last 5 nodes heard:\n" + str("\n".join(short_node_list))
+
         elif "whereami" in message:
             bot_response = self.where_am_i(location[0], location[1])
+            
         elif "joke" in message:
             bot_response = self.tell_joke()
         

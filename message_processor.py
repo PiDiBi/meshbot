@@ -11,7 +11,7 @@ class MessageProcessor:
     self.trap_list = []
     pass
   
-  def auto_response(self, message, snr, rssi, hop, message_from_id, location:list[float]):
+  def auto_response(self, message, snr, rssi, hop, message_from_id, location:list[float], node_list:list[str]):
     # wait a 700ms to avoid message collision from lora-ack
     time.sleep(0.7)
     pass
