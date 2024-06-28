@@ -4,9 +4,8 @@ connect your node over serial to Raspberry PI and let this bot answer public and
 
 ## requirements
 
-- python3
-- pip
 - meshtastic python CLI - https://meshtastic.org/docs/software/python/cli/installation/
+  - got you to install python, pip and few other dependencies
 - dependencies - install with `pip install -r requirements.txt`
 
 ## Commands
