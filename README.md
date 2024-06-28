@@ -1,9 +1,12 @@
 # meshbot
 
+connect your node over serial to Raspberry PI and let this bot answer public and private messages
+
 ## requirements
 
 - python3
 - pip
+- meshtastic python CLI - https://meshtastic.org/docs/software/python/cli/installation/
 - dependencies - install with `pip install -r requirements.txt`
 
 ## Commands
