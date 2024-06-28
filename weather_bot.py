@@ -1,10 +1,13 @@
-import datetime
 import json
 import requests
-import xml
+import xml.dom.minidom
 import ephem
-from message_processor import MessageProcessor
 import bs4 as bs
+from datetime import datetime
+from datetime import timedelta
+
+from message_processor import MessageProcessor
+
 
 class WeatherBot(MessageProcessor):
     
@@ -106,7 +109,7 @@ class WeatherBot(MessageProcessor):
         sun_table['set_time'] = local_sunset.strftime('%a %d %I:%M')
         # if sunset is before sunrise, then it's tomorrow
         if local_sunset < local_sunrise:
-            local_sunset = ephem.localtime(obs.next_setting(sun)) + datetime.timedelta(1)
+            local_sunset = ephem.localtime(obs.next_setting(sun)) + timedelta(1)
             sun_table['set_time'] = local_sunset.strftime('%a %d %I:%M')
         sun_data = "Sun Rise: " + sun_table['rise_time'] + "\nSet: " + sun_table['set_time']
         
