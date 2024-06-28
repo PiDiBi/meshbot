@@ -1,6 +1,7 @@
 # meshbot
 
 connect your node over serial to Raspberry PI and let this bot answer public and private messages
+bot response to messages from public channel into direct messages too
 
 ## requirements
 
@@ -38,7 +39,8 @@ cd meshbot
 ## commands
 
 - basic functions
-  - `ping` - response with PONG and signal strength
+  - `ping` - response with `PONG` and signal strength
+  - `ack` - response `ACK-ACK!` and signal strength
   - `whereami` returns the address of location of sender if known
   - `joke` tells a joke
   - `whereami` - tries to find your location from GPS
