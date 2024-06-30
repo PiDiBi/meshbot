@@ -7,7 +7,7 @@ thread_local = threading.local()
 
 def get_db_connection():
     if not hasattr(thread_local, "connection"):
-        thread_local.connection = sqlite3.connect("messages.db")
+        thread_local.connection = sqlite3.connect(database="messages.db", check_same_thread=False)
     return thread_local.connection
 
 

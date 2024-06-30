@@ -27,6 +27,16 @@ def show_messages():
     messages = get_messages(100)
     return render_template_string(HTML_TEMPLATE, messages=messages)
 
+@app.errorhandler(404)
+@app.route('/404')
+def page_not_found(e):
+    return render_template_string('Page Not Found'), 404
+
+@app.errorhandler(500)
+@app.route('/500')
+def error_page(e):
+    return render_template_string(f'Error:<br /> {e}'), 404
+
 def create_app():
    return app
 
