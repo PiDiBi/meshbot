@@ -7,6 +7,5 @@ geopy
 maidenhead
 beautifulsoup4
 dadjokes
-sqlite3
 mock
 pytest
