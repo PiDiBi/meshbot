@@ -17,7 +17,6 @@ class BasicBot(MessageProcessor):
         bot_response = None
         message = message.lower().strip()
         if "ping" in message:
-            # Check if the user added @foo to the message
             bot_response = "PONG, " + f"SNR:{snr} RSSI:{rssi} HOP {hop}"
             if " " in message:
                 bot_response += " and copy: " + message.split(" ")[1]

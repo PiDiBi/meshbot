@@ -2,6 +2,7 @@
 # Meshtastic Autoresponder MESH Bot
 
 import signal
+import time
 from typing import List
 from pubsub import pub
 from basic_bot import BasicBot
@@ -58,7 +59,9 @@ print(
 
 while True:
     # Catch CTL+C to exit
+    time.sleep(0.05)
     signal.signal(signal.SIGINT, exit_handler)
+    time.sleep(0.05)
     pass
 
 # EOF
