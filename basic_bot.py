@@ -1,3 +1,4 @@
+import time
 from meshtastic.stream_interface import StreamInterface
 from message_processor import MessageProcessor
 from geopy.geocoders import Nominatim
@@ -8,7 +9,7 @@ from dadjokes import Dadjoke
 class BasicBot(MessageProcessor):
     def __init__(self, interface: StreamInterface):
         super(BasicBot, self).__init__(interface)
-        self.trap_list = ["ping", "ack", "lheard", "sitrep", "joke", "whereami"]
+        self.trap_list = ["ping", "ack", "lheard", "sitrep", "joke", "whereami", "time"]
         pass
 
     def auto_response(
@@ -44,6 +45,8 @@ class BasicBot(MessageProcessor):
 
         elif "joke" in message:
             bot_response = self.tell_joke()
+        elif "time" in message:
+            bot_response = time.strftime('%H:%M:%S')
 
         return bot_response
 
