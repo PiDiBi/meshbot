@@ -190,3 +190,16 @@ def test_get_hf_band_conditions(mock_interface):
     assert "20m" in hf
     assert "15m" in hf
     assert "10m" in hf
+
+@patch("meshtastic.serial_interface.SerialInterface")
+def test_get_wx_alerts(mock_interface):
+    # Mock the SerialInterface to avoid actual serial communication
+    mock_interface = MagicMock()
+    mock_interface.return_value = mock_interface
+    bot = WeatherBot(mock_interface)
+    lat = "37.7749"
+    lon = "-122.4194"
+    alerts = bot.get_wx_alerts(lat, lon)
+    print(f"alerts: {alerts}")
+    assert alerts != bot.NO_DATA_NOGPS
+    assert alerts != bot.ERROR_FETCHING_DATA
