@@ -18,7 +18,7 @@ class WeatherBot(MessageProcessor):
 
     def __init__(self, interface: StreamInterface):
         super(WeatherBot, self).__init__(interface)
-        self.trap_list = ["sun", "solar", "hfcond", "tide", "moon", "wxc", "wx"]
+        self.trap_list = ["sun", "solar", "hfcond", "tide", "moon", "wxc", "wx", "alerts"]
         pass
 
     def auto_response(
@@ -42,6 +42,8 @@ class WeatherBot(MessageProcessor):
             bot_response = self.get_weather(str(location[0]), str(location[1]), 1)
         elif "wx" in message:
             bot_response = self.get_weather(str(location[0]), str(location[1]))
+        elif "alerts" in message:
+            bot_response = self.get_wx_alerts(str(location[0]), str(location[1]))
 
         return bot_response
 
@@ -64,7 +66,7 @@ class WeatherBot(MessageProcessor):
                     + "\n"
                 )
         else:
-            hf_cond += "error fetching"
+            hf_cond = self.ERROR_FETCHING_DATA
         hf_cond = hf_cond[:-1]  # remove the last newline
         return hf_cond
 
@@ -322,6 +324,42 @@ class WeatherBot(MessageProcessor):
 
         return weather
 
+    def get_wx_alerts(self, lat=0, lon=0):
+        # get weather alerts from NOAA :: NOT IMPLEMENTED YET
+        alerts = ""
+        if float(lat) == 0 and float(lon) == 0:
+            return self.NO_DATA_NOGPS
+
+        # get weather alerts from NOAA
+        alert_url = "https://api.weather.gov/alerts/active.atom?point=" + str(lat) + "," + str(lon)
+        print(f"{log_timestamp()} System: {alert_url}")
+        
+        try:
+            alert_data = requests.get(alert_url, timeout=self.URL_TIMEOUT)
+            if not alert_data.ok:
+                return self.ERROR_FETCHING_DATA
+        except (requests.exceptions.RequestException):
+            return self.ERROR_FETCHING_DATA
+        
+        alerts = ""
+        alertxml = xml.dom.minidom.parseString(alert_data.text)
+        for i in alertxml.getElementsByTagName("entry"):
+            alerts += (
+                i.getElementsByTagName("updated")[0].childNodes[0].nodeValue
+                + ": "
+                + i.getElementsByTagName("title")[0].childNodes[0].nodeValue
+                + "\n"
+            )
+        
+        if alerts == "":
+            alerts = "No weather alerts found"
+
+        # trim off last newline
+        if alerts[-1] == "\n":
+            alerts = alerts[:-1]
+        
+        return alerts
+
     def replace_weather(self, row):
         replacements = {
             "Monday": "Mon ",
@@ -335,6 +373,7 @@ class WeatherBot(MessageProcessor):
             "Tonight": "Tonight ",
             "Tomorrow": "Tomorrow ",
             "This Afternoon": "Afternoon ",
+            "Overnight": "Overnight ",
             "northwest": "NW",
             "northeast": "NE",
             "southwest": "SW",
