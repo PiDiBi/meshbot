@@ -1,13 +1,17 @@
 import os
 import sys
-import pytest
+from unittest.mock import patch, MagicMock
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from weather_bot import WeatherBot
 
-from weather_bot import *
 
-def test_get_weather_with_valid_coordinates():
-    bot = WeatherBot()
+@patch("meshtastic.serial_interface.SerialInterface")
+def test_get_weather_with_valid_coordinates(mock_interface):
+    # Mock the SerialInterface to avoid actual serial communication
+    mock_interface = MagicMock()
+    mock_interface.return_value = mock_interface
+    bot = WeatherBot(mock_interface)
     # Test with valid coordinates
     lat = "37.7749"
     lon = "-122.4194"
@@ -35,18 +39,28 @@ def test_get_weather_with_valid_coordinates():
     assert "showers" not in weather
     assert "thunderstorms" not in weather
 
-def test_get_weather_with_invalid_coordinates():
+
+@patch("meshtastic.serial_interface.SerialInterface")
+def test_get_weather_with_invalid_coordinates(mock_interface):
+    # Mock the SerialInterface to avoid actual serial communication
+    mock_interface = MagicMock()
+    mock_interface.return_value = mock_interface
     # Test with invalid coordinates
-    bot = WeatherBot()
+    bot = WeatherBot(mock_interface)
     lat = 0
     lon = 0
     weather = bot.get_weather(lat, lon)
     print(f"weather: {weather}")
     assert weather == bot.NO_DATA_NOGPS
 
-def test_get_tide_with_valid_coordinates():
+
+@patch("meshtastic.serial_interface.SerialInterface")
+def test_get_tide_with_valid_coordinates(mock_interface):
+    # Mock the SerialInterface to avoid actual serial communication
+    mock_interface = MagicMock()
+    mock_interface.return_value = mock_interface
     # Test with valid coordinates
-    bot = WeatherBot()
+    bot = WeatherBot(mock_interface)
     lat = "37.7749"
     lon = "-122.4194"
     tide = bot.get_tide(lat, lon)
@@ -54,8 +68,13 @@ def test_get_tide_with_valid_coordinates():
     assert tide != bot.NO_DATA_NOGPS
     assert tide != bot.ERROR_FETCHING_DATA
 
-def test_replace_weather():
-    bot = WeatherBot()
+
+@patch("meshtastic.serial_interface.SerialInterface")
+def test_replace_weather(mock_interface):
+    # Mock the SerialInterface to avoid actual serial communication
+    mock_interface = MagicMock()
+    mock_interface.return_value = mock_interface
+    bot = WeatherBot(mock_interface)
     # Test replacing days of the week
     assert bot.replace_weather("Monday") == "Mon "
     assert bot.replace_weather("Tuesday") == "Tue "
@@ -93,9 +112,14 @@ def test_replace_weather():
     assert bot.replace_weather("showers") == "shwrs"
     assert bot.replace_weather("thunderstorms") == "t-storms"
 
-def test_get_moon_with_valid_coordinates():
+
+@patch("meshtastic.serial_interface.SerialInterface")
+def test_get_moon_with_valid_coordinates(mock_interface):
+    # Mock the SerialInterface to avoid actual serial communication
+    mock_interface = MagicMock()
+    mock_interface.return_value = mock_interface
     # Test with valid coordinates
-    bot = WeatherBot()
+    bot = WeatherBot(mock_interface)
     lat = "37.7749"
     lon = "-122.4194"
     moon = bot.get_moon(lat, lon)
@@ -108,9 +132,14 @@ def test_get_moon_with_valid_coordinates():
     assert "Full Moon" in moon
     assert "New Moon" in moon
 
-def test_solar_with_valid_coordinates():
+
+@patch("meshtastic.serial_interface.SerialInterface")
+def test_solar_with_valid_coordinates(mock_interface):
+    # Mock the SerialInterface to avoid actual serial communication
+    mock_interface = MagicMock()
+    mock_interface.return_value = mock_interface
     # Test with valid coordinates
-    bot = WeatherBot()
+    bot = WeatherBot(mock_interface)
     solar = bot.solar_conditions()
     print(f"solar: {solar}")
     assert solar != bot.NO_DATA_NOGPS
@@ -122,16 +151,27 @@ def test_solar_with_valid_coordinates():
     assert "X-Ray Flux" in solar
     assert "Signal Noise" in solar
 
-def test_drap_xray_conditions():
-    bot = WeatherBot()
+
+@patch("meshtastic.serial_interface.SerialInterface")
+def test_drap_xray_conditions(mock_interface):
+    # Mock the SerialInterface to avoid actual serial communication
+    mock_interface = MagicMock()
+    mock_interface.return_value = mock_interface
+
+    bot = WeatherBot(mock_interface)
     xray = bot.drap_xray_conditions()
     print(f"xray: {xray}")
     assert xray != bot.NO_DATA_NOGPS
     assert xray != bot.ERROR_FETCHING_DATA
     assert "X-ray" in xray
 
-def test_get_hf_band_conditions():
-    bot = WeatherBot()
+
+@patch("meshtastic.serial_interface.SerialInterface")
+def test_get_hf_band_conditions(mock_interface):
+    # Mock the SerialInterface to avoid actual serial communication
+    mock_interface = MagicMock()
+    mock_interface.return_value = mock_interface
+    bot = WeatherBot(mock_interface)
     hf = bot.hf_band_conditions()
     print(f"hf: {hf}")
     assert hf != bot.NO_DATA_NOGPS

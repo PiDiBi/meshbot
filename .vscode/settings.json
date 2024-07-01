@@ -8,4 +8,8 @@
     "python.testing.pytestEnabled": true,
     "python.testing.cwd": "${workspaceFolder}/tests",
     "python.testing.autoTestDiscoverOnSaveEnabled": true,
+    "flake8.args": [
+        "--max-line-length=120 --ignore E402,W503"
+    ],
+    "editor.defaultFormatter": "ms-python.black-formatter"
 }

@@ -7,5 +7,7 @@ geopy
 maidenhead
 beautifulsoup4
 dadjokes
+flask
+waitress
 mock
 pytest
