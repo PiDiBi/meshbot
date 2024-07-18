@@ -46,11 +46,10 @@ print ("\nMeshtastic Autoresponder MESH Bot CTL+C to exit\n")
 pub.subscribe(sh.onReceive, 'meshtastic.receive')
 print (f"System: Autoresponder Started for device {sh.get_name_from_number(sh.myNodeNum)}")
 
-while True:
-    # Catch CTL+C to exit
-    signal.signal(signal.SIGINT, exit_handler)
-    pass
+# Catch CTL+C to exit
+signal.signal(signal.SIGINT, exit_handler)
 
-
+# Wait for signals (replaces the infinite loop)
+signal.pause()
 
 # EOF
