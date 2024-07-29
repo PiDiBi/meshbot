@@ -38,7 +38,7 @@ cd meshbot
 
 ## configure
 
-If you want just basic bot edit this line from [mesh_bot.py](mesh_bot.py) accordingly to pass just bots you need 
+If you want just basic bot edit this line from [mesh_bot.py](mesh_bot.py) accordingly to pass just bots you need
 
 ```python3
 message_processors: List[MessageProcessor] = [bb, wb, sfb]
