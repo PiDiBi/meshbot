@@ -18,7 +18,7 @@ class WeatherBot(MessageProcessor):
 
     def __init__(self, interface: StreamInterface):
         super(WeatherBot, self).__init__(interface)
-        self.trap_list = ["sun", "solar", "hfcond", "tide", "moon", "wxc", "wx", "alerts"]
+        self.trap_list = ["sun", "solar", "hfcond", "tide", "moon", "wxc", "wx", "wxa"]
         pass
 
     def auto_response(
@@ -42,7 +42,7 @@ class WeatherBot(MessageProcessor):
             bot_response = self.get_weather(str(location[0]), str(location[1]), 1)
         elif "wx" in message:
             bot_response = self.get_weather(str(location[0]), str(location[1]))
-        elif "alerts" in message:
+        elif "wxa" in message:
             bot_response = self.get_wx_alerts(str(location[0]), str(location[1]))
 
         return bot_response

@@ -39,6 +39,19 @@ def test_get_weather_with_valid_coordinates(mock_interface):
     assert "showers" not in weather
     assert "thunderstorms" not in weather
 
+@patch("meshtastic.serial_interface.SerialInterface")
+def test_get_weather_with_valid_EU_coordinates(mock_interface):
+    # Mock the SerialInterface to avoid actual serial communication
+    mock_interface = MagicMock()
+    mock_interface.return_value = mock_interface
+    bot = WeatherBot(mock_interface)
+    # Brno, Czech Republic
+    lat = "49.2835628812946"
+    lon = "16.565363025853"
+    weather = bot.get_weather(lat, lon)
+    print(f"weather: {weather}")
+    assert weather != bot.NO_DATA_NOGPS
+    assert weather == bot.ERROR_FETCHING_DATA
 
 @patch("meshtastic.serial_interface.SerialInterface")
 def test_get_weather_with_invalid_coordinates(mock_interface):

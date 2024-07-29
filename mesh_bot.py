@@ -42,7 +42,8 @@ sh = SerialMeshHelper(interface, message_processors)
 
 def exit_handler(signum, frame):
     print("\nSystem: Closing Autoresponder")
-    interface.close()
+    if interface:
+        interface.close()
     exit(0)
 
 
