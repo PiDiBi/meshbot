@@ -36,6 +36,20 @@ cd meshbot
 - start service `sudo systemctl start meshbot.service`
 - see status `sudo systemctl status meshbot.service | more` - this one displays log from the service so you can see when you send a message what happened
 
+## configure
+
+If you want just basic bot edit this line from [mesh_bot.py](mesh_bot.py) accordingly to pass just bots you need 
+
+```python3
+message_processors: List[MessageProcessor] = [bb, wb, sfb]
+```
+
+change to
+
+```python3
+message_processors: List[MessageProcessor] = [bb]
+```
+
 ## commands
 
 - basic functions
@@ -50,7 +64,9 @@ cd meshbot
   - `solar` gives an idea of the x-ray flux
   - `hfcond` returns a table of HF solar conditions
   - `wx` and `wxc` returns local weather forcast, NOAA data source (wxc is metric value)
-
+- store forward
+  - `messages` - send last 5 stored messages which were received by bot on public channel
+  
 ## recognition
 
 Used ideas and snippets from other responder bots want to call them out!
